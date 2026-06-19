@@ -1773,48 +1773,76 @@ void AutoDetermineTypeTIGB(eTypeImporGenBundle & aType,const std::string & aName
            std::string aPost2 = aName.substr(aName.size()-7,3);// StdPostfix(aName.substr(0,aName.size()-4));
 
            //if( aPost2 != "txt" && aPost2 != "TXT" && aPost2 != "Txt" && aPost2 != "rpc")
-           if( aPost2 != "txt" && aPost2 != "TXT" && aPost2 != "Txt" )
+           if( aPost2 != "txt" && aPost2 != "TXT" && aPost2 != "Txt" && aPost2 != "GRI" && aPost2 != "gri")
            {
                 cElXMLTree * aTree = new cElXMLTree(aName);
 
                 cElXMLTree * aXmlMETADATA_FORMAT = aTree->Get("METADATA_FORMAT");
                 if (aXmlMETADATA_FORMAT)
                 {
-                    std::string aStrMETADATA_FORMAT = aXmlMETADATA_FORMAT->GetUniqueVal() ;
-                    if (aStrMETADATA_FORMAT == "DIMAP")
-                    {
-                        std::string aStrVersion = aXmlMETADATA_FORMAT->ValAttr("version","-1");
-                        if ((aStrVersion =="2.0") || (aStrVersion =="2.12") || (aStrVersion =="2.15"))
+
+                    // PNEO new format @version 3.0
+                    if (aXmlMETADATA_FORMAT->Profondeur()>1)
+                    {    
+                        /*cElXMLTree * aXmlMETADATA_FORMAT_LevsK = aXmlMETADATA_FORMAT->Get("key");
+                        std::cout << "xxxxxxxxxxxxxxxx " << " " << aXmlMETADATA_FORMAT_LevsK->ValTag() << std::endl;
+                        std::cout << "xxxxxxxxxxxxxxxx " << " " << aXmlMETADATA_FORMAT_LevsK->Contenu() << std::endl;
+                        std::cout << "xxxxxxxxxxxxxxxx " << " " << aXmlMETADATA_FORMAT_LevsK->GetUniqueVal() << std::endl;
+                        std::cout << "xxxxxxxxxxxxxxxx " << " " << aXmlMETADATA_FORMAT_LevsK->ValAttr("name") << std::endl;*/
+
+                        std::list<cElXMLTree *>   & fils = aXmlMETADATA_FORMAT->Fils();
+
+                        for (auto aF : fils)
                         {
-                             //std::cout << "GOT DIMAP2 \n"; getchar();
-                            aType = eTIGB_MMDimap2;
-                            return;
-                        }
-                        else if (aStrVersion == "3.0")
-                        {
-                            //std::cout << "GOT DIMAP3 \n"; getchar();
-                            aType = eTIGB_MMDimap3;
-                            return;
-                        }
-                        else
-                        {
-                            cElXMLTree * aXmlMETADATA_VERSION = aTree->Get("METADATA_VERSION");
-                            if(aXmlMETADATA_VERSION)
+                            if (aF->ValAttr("name") == "@version")
                             {
-                                std::string aStrMETADATA_VERSION = aXmlMETADATA_VERSION->GetUniqueVal() ;
-                                if(aStrMETADATA_VERSION == "2.0")
+                                if (aF->Contenu() == "3.0")
                                 {
-                                    aType = eTIGB_MMDimap2;
+                                    aType = eTIGB_MMDimap3;
                                     return;
                                 }
                             }
-                            else
-                            {
-                                ELISE_ASSERT(false,"AutoDetermineTypeTIGB; A new DIMAP version? We only know versions 2.0, 2.12 and 2.15. Contact developpers for help."); 
-                                
-                            }
-                            
                         }
+                    }
+                    else
+                    {
+
+                         std::string aStrMETADATA_FORMAT = aXmlMETADATA_FORMAT->GetUniqueVal() ;
+                         if (aStrMETADATA_FORMAT == "DIMAP")
+                         {
+                             std::string aStrVersion = aXmlMETADATA_FORMAT->ValAttr("version","-1");
+                             if ((aStrVersion =="2.0") || (aStrVersion =="2.12") || (aStrVersion =="2.15"))
+                             {
+                                  //std::cout << "GOT DIMAP2 \n"; getchar();
+                                 aType = eTIGB_MMDimap2;
+                                 return;
+                             }
+                             else if (aStrVersion == "3.0")
+                             {
+                                 //std::cout << "GOT DIMAP3 \n"; getchar();
+                                 aType = eTIGB_MMDimap3;
+                                 return;
+                             }
+                             else
+                             {
+                                 cElXMLTree * aXmlMETADATA_VERSION = aTree->Get("METADATA_VERSION");
+                                 if(aXmlMETADATA_VERSION)
+                                 {
+                                     std::string aStrMETADATA_VERSION = aXmlMETADATA_VERSION->GetUniqueVal() ;
+                                     if(aStrMETADATA_VERSION == "2.0")
+                                     {
+                                         aType = eTIGB_MMDimap2;
+                                         return;
+                                     }
+                                 }
+                                 else
+                                 {
+                                     ELISE_ASSERT(false,"AutoDetermineTypeTIGB; A new DIMAP version? We only know versions: 2.0, 2.12, 2.15, 3.0. Contact developpers for help."); 
+                                     
+                                 }
+                                 
+                             }
+                         }
                     }
                 }
 
@@ -1838,21 +1866,39 @@ void AutoDetermineTypeTIGB(eTypeImporGenBundle & aType,const std::string & aName
                     aType = eTIGB_MMDGlobe;
                     return;
                 }
-                
+
+
                 //Xml_ScanLineSensor
                 if (aTree->Get("Xml_ScanLineSensor") !=0)
                 {
                     aType = eTIGB_MMScanLineSensor;
                     return;
                 }
-				//MMEpip
-				if (aTree->Get("ListeAppuis1Im") !=0)
-				{
-					aType = eTIGB_MMEpip;
-					return;
-				}
+	        //MMEpip
+	        if (aTree->Get("ListeAppuis1Im") !=0)
+		{
+		    aType = eTIGB_MMEpip;
+		    return;
+		}
 
            }
+	   else if (aPost2=="GRI" || aPost2=="gri")
+	   {
+
+	       cElXMLTree * aTree = new cElXMLTree(aName);
+               if (aTree->Get("trans_coord_grid") !=0)
+               {
+
+                    aType = eTIGB_MMOriGrille;
+                    return;
+               }
+	       else 
+	       {
+	           aType = eTIGB_MMDimap2;
+                   return;
+	       }
+
+	   }
            else
            {
                 std::string aLine;
@@ -1867,6 +1913,7 @@ void AutoDetermineTypeTIGB(eTypeImporGenBundle & aType,const std::string & aName
                 else
                     aType = eTIGB_MMIkonos;
                 
+		return;
 
            }
        }

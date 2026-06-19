@@ -189,6 +189,8 @@ extern int AlphaGet27_main(int argc, char ** argv);
 
 extern int mergeSOMAF_main(int argc, char ** argv);
 
+extern int Tagine_main(int argc, char ** argv);
+
 
 int TiePMS_main(int argc, char ** argv);
 int TiePLine_main(int argc, char ** argv);
@@ -209,6 +211,7 @@ int OriRedTie_main(int argc, char **argv);
 int HomFusionPDVUnik_main(int argc, char **argv);
 int TestDistM2C_main(int argc, char ** argv);
 int TestDistortion_main(int argc, char ** argv);
+int Bundles2Comp_main(int argc, char ** argv);
 
 int Blinis_main(int argc, char ** argv);
 int OrientFromBlock_main(int argc, char ** argv);
@@ -305,6 +308,7 @@ int CPP_L3D2Ply(int argc,char ** argv);
 int CPP_DebugAI4GeoMasq (int argc,char ** argv);
 int CPP_MMBasic4IGeo(int argc,char ** argv);
 int CPP_MMBasicTestDeep(int argc,char ** argv);
+int Tenor_main(int argc,char ** argv);
 
 int MMVII_SaisieMasq_main(int argc,char ** argv);
 
@@ -517,6 +521,7 @@ const std::vector<cMMCom> & getAvailableCommands()
 		aRes.push_back(cMMCom("TestCam", TestCam_main, " Test camera orientation convention"));
 		aRes.push_back(cMMCom("TestDistM2C", TestDistM2C_main, " Basic Test for problematic camera "));
 		aRes.push_back(cMMCom("TestDistortion", TestDistortion_main, " Basic Test of distortion formula "));
+		aRes.push_back(cMMCom("Bundles2Comp", Bundles2Comp_main, " Export of Micmac bundles to Comp3D (code 12) obs "));
 		aRes.push_back(cMMCom("TestChantier", TestChantier_main, " Test global acquisition"));
 
 		aRes.push_back(cMMCom("TestKey", TestSet_main, " Test Keys for Sets and Assoc"));
@@ -549,8 +554,9 @@ const std::vector<cMMCom> & getAvailableCommands()
 		aRes.push_back(cMMCom("SimuLib", SimuLib_Main, " Library (almost empty now)  for simulating"));
 		aRes.push_back(cMMCom("XLib", XLib_Main, " Xeres Lib - early work in progress!"));
 
-		aRes.push_back(cMMCom("AlphaGet27", AlphaGet27_main, " Tool for relative positioning of objects on images"));
-		aRes.push_back(cMMCom("MergeSOMAF", mergeSOMAF_main, " Tool for merging SetOfMesureAppuisFlottants XMLs"));
+        aRes.push_back(cMMCom("AlphaGet27", AlphaGet27_main, " Tool for relative positioning of objects on images"));
+        aRes.push_back(cMMCom("MergeSOMAF", mergeSOMAF_main, " Tool to merge SetOfMesureAppuisFlottants XMLs"));
+        aRes.push_back(cMMCom("Tagine", Tagine_main, " Tool to create saisie file based on image pattern and one saisie"));
 
 #if ELISE_QT
 		aRes.push_back(cMMCom("SaisieAppuisInitQT", SaisieAppuisInitQT_main, " Interactive tool for initial capture of GCP"));
@@ -642,6 +648,7 @@ const std::vector<cMMCom> & getAvailableCommands()
 		aRes.push_back(cMMCom("PHom_ApBin", CPP_PHom_ApprentBinaire, "Test Binary "));
 		aRes.push_back(cMMCom("FitsMatch", CPP_FitsMatch1Im, "Test Match Images NewPHom "));
 		aRes.push_back(cMMCom("GenPrime", CPP_GenPrime, "Generate prime "));
+		aRes.push_back(cMMCom("Tenor",Tenor_main,"Historical orthophotos"));
 
        aRes.push_back(cMMCom("DroneFootPrint",DroneFootPrint,"Draw footprint from image + orientation (drone) in PLY and QGIS format"));
    }
@@ -971,6 +978,7 @@ extern int TransmitHelmert_main(int argc, char ** argv);
 extern int TiePtPrep_main(int argc, char ** argv);
 extern int CreateGCPs4Init11p_main(int argc, char ** argv);
 extern int CreateGCPs4Init11pSamePts_main(int argc, char ** argv);
+extern int GeoreferencedDepthMap_main(int argc, char ** argv);
 
 
 extern int ReechHomol_main(int argc, char ** argv);
@@ -1064,6 +1072,7 @@ const std::vector<cMMCom> & TestLibAvailableCommands()
         aRes.push_back(cMMCom("TiePtPrep", TiePtPrep_main, "Explaination: Add weight to inter-epoch tie points, and merge them with intra-epoch tie points"));
         aRes.push_back(cMMCom("CreateGCPs4Init11p", CreateGCPs4Init11p_main, "Create virtual GCPs for command Init11p (Define grids in each image, which leads to different sets of points for each image)"));
         aRes.push_back(cMMCom("CreateGCPs4Init11pSamePts", CreateGCPs4Init11pSamePts_main, "Create virtual GCPs for command Init11p (Define grids in ground, which leads to the same sets of points for each image)"));
+        aRes.push_back(cMMCom("GeoreferencedDepthMap", GeoreferencedDepthMap_main, "Get georeferenced coordinate for the depth map generated from Malt GeomImage"));
 
 
 
